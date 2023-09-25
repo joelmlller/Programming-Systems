@@ -1,0 +1,45 @@
+(*Joel Miller*)
+(*CPSC 3520*)
+(*August 4, 2023*)
+(*Professor Wu*)
+
+
+
+
+(* Recursive function to find the first duplicate in a list. *)
+let rec first_duplicate xs =
+  match xs with
+  | [] -> -10000 (* Return -10000 if there are no duplicates in the list. *)
+  | hd::tl -> if List.mem hd tl then hd else first_duplicate tl (* If the head of the list exists in the tail, return the head. Otherwise, continue with the tail of the list. *)
+
+(* Helper function to find the first non-repeating element in a list. *)
+let rec notRepeating list duplicate_list =
+  if list = [] then
+    -10000 (* Return -10000 if there are no non-repeating elements in the list. *)
+  else
+  if List.mem(List.hd list)(List.tl list) || List.mem(List.hd list)(duplicate_list) then
+    notRepeating(List.tl list)(List.hd list::duplicate_list) (* If the head of the list exists in the tail or in the duplicates list, continue with the tail of the list. *)
+  else
+    (List.hd list) (* If the head of the list doesn't exist in the tail or in the duplicates list, return the head. *)
+
+(* Function to find the first non-repeating element in a list. *)
+let rec first_nonrepeating = function(list) ->
+  notRepeating list [] (* Use the helper function notRepeating with an empty duplicates list. *)
+
+(* Helper function to determine if a number exists in a list. *)
+let rec partof x b = match b with
+    [] -> false (* Return false if the list is empty. *)
+  | (y::ys) -> x=y || partof x ys (* Return true if the head of the list is equal to x. Otherwise, continue with the tail of the list. *)
+
+(* Recursive function to determine if there is a pair of elements from two lists that sum to a given value. *)
+let rec sumOfTwo(a,b,v) = match a with
+    [] -> false (* Return false if the first list is empty. *)
+  | (x::xs) -> partof (v-x) b || sumOfTwo(xs,b,v) (* If (v - head of a) exists in b, return true. Otherwise, continue with the tail of a. *)
+
+(* Helper function to generate tuples for cyk_sublists. *)
+let rec cykHelp n y = match n with
+    0 -> [] (* Return an empty list if n equals 0. *)
+  | x -> (x, (y-x)) :: (cykHelp (x-1) y) (* Add a tuple (x, y - x) to the list and continue with (x - 1). *)
+
+(* Function to generate tuples for the CYK parsing algorithm. *)
+let cyk_sublists n = List.rev (cykHelp (n-1) n) (* Use the helper function cykHelp and reverse the resulting list. *)
